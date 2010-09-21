@@ -4,8 +4,9 @@ package Test::Magic;
     use Scalar::Util 'reftype';
     use Carp;
     use Test::More;
+    our @ISA = 'Test::More';
     our @EXPORT = (qw(test done), @Test::More::EXPORT);
-    our $VERSION = '0.10';
+    our $VERSION = '0.11';
 
 =head1 NAME
 
@@ -13,7 +14,7 @@ Test::Magic - terse tests with useful error feedback
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =cut
 
@@ -67,7 +68,6 @@ Version 0.10
     };
 
     sub test {
-        no overloading;
         my $name = shift;
         if (grep {ref ne 'Test::Magic::Test'} @_) {
             croak "invalid arguments for test:\n".
@@ -182,7 +182,7 @@ alias for C< Test::More::done_testing >
 
 =head1 NOTES
 
-this module does NOT use source filtering. for those interested in how it does
+this module does B<not> use source filtering. for those interested in how it does
 work, the code:
 
     test 'my test',
