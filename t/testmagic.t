@@ -6,10 +6,13 @@ use Test::More tests => 20;
 BEGIN {unshift @INC, '../lib'}
 require Test::Magic;
 
-note "Test::Magic $Test::Magic::VERSION";
+diag "Test::Magic $Test::Magic::VERSION";
 
-my @tap = split /^(?=ok|not ok)/m, (-d 't' ? `$^X t/testmagic.sub`
-                                           : `$^X testmagic.sub`);
+my ($plan, @tap) = split /^(?=ok|not ok)/m, (-d 't' ? `$^X t/testmagic.sub`
+                                                    : `$^X testmagic.sub`);
+
+BAIL_OUT 'error running subtests' unless $plan =~ /1\.\.20/;
+
 my %plan = (
      1 => [qr/got: 1.+expected: 2/s],
      2 => [qr/got: 3.+expected: 7/s],

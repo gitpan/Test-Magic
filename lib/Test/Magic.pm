@@ -5,8 +5,8 @@ package Test::Magic;
     use Carp;
     use Test::More;
     our @ISA = 'Test::More';
-    our @EXPORT = (qw(test done), @Test::More::EXPORT);
-    our $VERSION = '0.11';
+    our @EXPORT = ('test', @Test::More::EXPORT);
+    our $VERSION = '0.20';
 
 =head1 NAME
 
@@ -14,7 +14,7 @@ Test::Magic - terse tests with useful error feedback
 
 =head1 VERSION
 
-Version 0.11
+Version 0.20
 
 =cut
 
@@ -33,7 +33,7 @@ Version 0.11
     );
     @invert{values %invert} = keys %invert;
 
-    use overload 'nomethod' => sub {
+    use overload fallback => 0, 'nomethod' => sub {
         my ($self, $expect, $flip, $op) = @_;
         my ($got, $invert) = @$self{qw/got invert/};
 
@@ -84,10 +84,7 @@ Version 0.11
             $_->($name.' '.$num++) for @_
         }
     }
-    BEGIN {
-        undef $_ for *is, *isnt;
-        *done = \&done_testing;
-    }
+    BEGIN {undef $_ for *is, *isnt}
     sub is   ($) {bless {got => $_[0]}}
     sub isnt ($) {bless {got => $_[0], invert => 1}}
 
@@ -151,8 +148,7 @@ numbered if you have more than one test.
 
 =head1 EXPORT
 
-C< test is isnt done > and everything from L<Test::More> except C< is > and
-C< isnt >
+C< test is isnt > and everything from L<Test::More> except C< is > and C< isnt >
 
 =head1 SUBROUTINES
 
@@ -160,8 +156,9 @@ C< isnt >
 
 =item C< test NAME, LIST_OF_TESTS >
 
-test runs a list of tests.  if there is one test, C< NAME > is used unchanged.
-otherwise, each test is sequentially numbered (C< NAME 1 >, C< NAME 2 >, ...)
+C< test > runs a list of tests.  if there is one test, C< NAME > is used
+unchanged. otherwise, each test is sequentially numbered (C< NAME 1 >,
+C< NAME 2 >, ...)
 
 =item C< is GOT OPERATOR EXPECTED >
 
@@ -173,10 +170,6 @@ if you must, it needs to be written C< (is 1 == 1) > and never C< is(1 == 1) >
 prepares a test for C< test > that expects to fail. do not use parenthesis with
 C< isnt >. if you must, it needs to be written C< (isnt 1 == 1) > and never
 C< isnt(1 == 1) >
-
-=item C< done [NUMBER_OF_TESTS] >
-
-alias for C< Test::More::done_testing >
 
 =back
 

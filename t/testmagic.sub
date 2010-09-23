@@ -1,4 +1,4 @@
-use Test::Magic;
+use Test::Magic tests => 20;
 
 Test::More->builder->failure_output(\*STDOUT);
 
@@ -17,28 +17,28 @@ test '< pass',
   is 0 < 1;
 
 test 'regex pass',
-  is 'str' ~~ q/t/;
+  is 'str' == qr/t/;
 
 test 'regex fail',
-  is 'str' ~~ q/tt/;
+  is 'str' == qr/tt/;
 
 test 'not; pass',
   isnt 2 <= 1,
-  isnt 'str' ~~ q/tt/;
+  isnt 'str' == qr/tt/;
 
 test 'not; fail',
   isnt 0 < 1,
-  isnt 'str' ~~ q/t/;
+  isnt 'str' == qr/t/;
 
 test 'complex pass' => do {
   my $var = 'x';
-  is $var ~~ q/x/,
+  is $var == qr/x/,
   is $var lt 'z'
 };
 
 test 'complex fail' => do {
   my $var = 'x';
-  is $var ~~ q/y/,
+  is $var == qr/y/,
   is $var gt 'z'
 };
 
@@ -54,4 +54,3 @@ test 'deep mix, fail',
 test 'deep hash, fail',
   is {a => 1, b => 2} == {a => 1, b => 3};
 
-done;
