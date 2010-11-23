@@ -1,4 +1,7 @@
-Revision history for Test-Magic
+revision history for Test-Magic
 
 0.10    2010.09.19
-        First version, bringing more magic to your tests.
+        first version, bringing more magic to your tests.
+
+0.21    2010.11.22
+        fix bleedperl regex stringify

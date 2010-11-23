@@ -1,12 +1,11 @@
 package Test::Magic;
     use warnings;
     use strict;
-    use Scalar::Util 'reftype';
     use Carp;
     use Test::More;
     our @ISA = 'Test::More';
     our @EXPORT = ('test', @Test::More::EXPORT);
-    our $VERSION = '0.20';
+    our $VERSION = '0.21';
 
 =head1 NAME
 
@@ -14,7 +13,7 @@ Test::Magic - terse tests with useful error feedback
 
 =head1 VERSION
 
-Version 0.20
+Version 0.21
 
 =cut
 
@@ -42,8 +41,7 @@ Version 0.20
                                                        or $op eq '~~';
         bless do {
             ($op eq '~~' or
-            ($op eq '==' or $op eq '!=')
-              && ref $expect eq ref qr//)
+            ($op =~ /[!=]=/ and ref $expect eq ref qr//))
                 ? sub {
                     ref or $_ = qr/$_/ for $expect;
                     @_ = ($got, $expect, $_[0]);
@@ -51,7 +49,7 @@ Version 0.20
                         ? goto &unlike
                         : goto &like
                 }
-            : (ref $expect and $op eq '==')
+            : ($op eq '==' and ref $expect)
                 ? do {
                     croak 'unable to invert is_deeply' if $invert;
                     sub {
@@ -94,7 +92,7 @@ Version 0.20
 
     test 'numbers',
       is 1 == 1,
-      is 1 > 2;
+      is 1 > 2; 
 
     test 'strings',
       is 'asdf' eq 'asdf',
@@ -175,8 +173,8 @@ C< isnt(1 == 1) >
 
 =head1 NOTES
 
-this module does B<not> use source filtering. for those interested in how it does
-work, the code:
+this module does B<not> use source filtering. for those interested in how it
+does work, the code:
 
     test 'my test',
       is 1 == 1,

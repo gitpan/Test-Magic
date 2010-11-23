@@ -15,7 +15,7 @@ name: Test-Magic
 provides:
   Test::Magic:
     file: lib/Test/Magic.pm
-    version: 0.20
+    version: 0.21
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.20
+version: 0.21
